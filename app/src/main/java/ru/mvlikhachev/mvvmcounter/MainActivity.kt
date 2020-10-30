@@ -4,29 +4,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.mvlikhachev.mvvmcounter.ViewModel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var counter : TextView
+    lateinit var mViewModel : MainActivityViewModel
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        counter = findViewById(R.id.counterTextView)
+        mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
     }
 
     override fun onStart() {
         super.onStart()
-        object : CountDownTimer(20000, 1000){
-            override fun onFinish() {
-                TODO("Not yet implemented")
-            }
+        mViewModel.liveData.observe(this, {
+            counterTextView.text = it
+        })
 
-            override fun onTick(p0: Long) {
-                counter.text = (p0 / 1000).toString()
-            }
-        }.start()
     }
 }
